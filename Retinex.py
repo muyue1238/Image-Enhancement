@@ -1,6 +1,11 @@
 import argparse
 import numpy as np
 import cv2
+import argparse
+parser = argparse.ArgumentParser()
+parser.add_argument('--image', default='', type=str,
+                    help='The filename of image to be completed.')
+args = parser.parse_args()
 
 
 def singleScaleRetinexProcess(img, sigma):
@@ -66,18 +71,13 @@ def MSRCR(img, sigma_list=[15, 80, 250], G=5, b=25, alpha=125, beta=46, low_clip
     return msrcr
 
 def main():
-    ap = argparse.ArgumentParser()
-    ap.add_argument('--image', required=True)
-    args = vars(ap.parse_args())
-
-    image = cv2.imread(args["image"])
+    image = cv2.imread(args.image)
 
     ssr = SSR(image)
     msr = MSR(image)
     msrcr = MSRCR(image)
 
     cv2.imwrite("ssr_dst.png", np.hstack([image, ssr, msr, msrcr]))
-    # cv2.waitKey(0)
 
 
 if __name__ == "__main__":
